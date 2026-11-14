@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>キントレーナー — デスクトップに、専属トレーナー。</title>
+<meta name="description" content="Windowsのデスクトップに常駐して、筋トレと食事管理を見守ってくれるキャラクターアプリ。立ち絵とボイスを差し替えれば、好きなキャラでつくれます。">
+<meta property="og:title" content="キントレーナー — デスクトップに、専属トレーナー。">
+<meta property="og:description" content="サボれば怒る。続ければ褒めてくれる。デスクトップ常駐の筋トレアシストアプリ。">
+<meta property="og:image" content="assets/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/aic_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Inter:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0718;--bg2:#120a24;--card:#1a1030;--line:#33244f;--text:#f3edff;--muted:#bfb2d9;--accent:#c9a5ff;--accent2:#8a3ffc;--lav:#f3e6ff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Zen Kaku Gothic New',sans-serif;line-height:1.9;-webkit-font-smoothing:antialiased}
+p,li,h1,h2,h3,dd,dt,summary{word-break:auto-phrase;text-wrap:pretty}
+p,li,summary,dd{letter-spacing:.04em}
+img,video{display:block;max-width:100%}
+a{color:var(--accent)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.num{font-family:Inter,sans-serif}
+.kicker{font-family:Inter,sans-serif;font-size:13px;font-weight:800;letter-spacing:.25em;color:var(--accent)}
+h2{margin:0;font-size:clamp(30px,4vw,46px);line-height:1.45;font-weight:900}
+h2 em,h1 em{font-style:normal;color:var(--accent)}
+section{padding:128px 0;border-top:1px solid #1d1333}
+.head{display:flex;flex-direction:column;gap:16px;max-width:720px;margin-bottom:64px}
+.head p{margin:0;color:var(--muted);font-size:17px}
+/* nav */
+header{position:sticky;top:0;z-index:20;background:rgba(12,7,24,.85);backdrop-filter:blur(10px);border-bottom:1px solid #1d1333}
+nav{display:flex;align-items:center;gap:12px 32px;flex-wrap:wrap;padding:16px 24px;max-width:1160px;margin:0 auto}
+.brand{font-weight:900;font-size:22px;text-decoration:none;color:var(--text);display:flex;align-items:center;gap:10px}
+.brand span{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 12px var(--accent2)}
+.links{display:flex;gap:8px 26px;flex-wrap:wrap;font-size:15px;flex:1}
+.links a{color:var(--muted);text-decoration:none}
+.links a:hover{color:var(--text)}
+/* hero */
+.hero{position:relative;overflow:hidden;padding:96px 0 80px;border-top:0;background:radial-gradient(circle at 78% 20%,rgba(138,63,252,.35),transparent 55%),radial-gradient(circle at 5% 95%,rgba(56,107,255,.18),transparent 50%)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center}
+.hero h1{margin:14px 0 0;font-size:clamp(46px,6.4vw,92px);line-height:1.1;font-weight:900;white-space:nowrap;background:linear-gradient(120deg,#fff,#dcc2ff 50%,#9a5cff);-webkit-background-clip:text;color:transparent}
+.hero .lead{font-size:clamp(22px,2.4vw,30px);font-weight:700;margin:18px 0 0}
+.hero .sub{color:var(--muted);font-size:17px;margin:18px 0 0;max-width:560px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.btn{display:inline-flex;align-items:center;min-height:50px;padding:0 28px;border-radius:999px;font-weight:700;text-decoration:none;font-size:16px}
+.btn.primary{background:linear-gradient(135deg,#a874ff,#7b2cf0);color:#fff;box-shadow:0 10px 30px rgba(123,44,240,.4)}
+.btn.ghost{border:1px solid var(--line);color:var(--text)}
+.hero-char{justify-self:center;height:min(640px,70vw);filter:drop-shadow(0 30px 60px rgba(138,63,252,.35))}
+.video{margin-top:72px;border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:0 40px 100px rgba(0,0,0,.5)}
+.video video{width:100%;aspect-ratio:16/9;background:#000}
+.video figcaption{font-size:13px;color:var(--muted);padding:10px 18px;background:var(--bg2)}
+/* problem */
+.cards3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:32px}
+.card h3{margin:0 0 10px;font-size:21px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+/* features */
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:48px 72px;align-items:center;margin-bottom:112px}
+.feat:last-child{margin-bottom:0}
+.feat .shot{border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.5);max-width:480px;justify-self:center;position:relative}
+.feat .shot::after{content:"実際のアプリ画面";position:absolute;right:12px;top:12px;font-size:12px;background:rgba(12,7,24,.75);color:var(--muted);padding:3px 10px;border-radius:6px}
+.feat .txt{display:flex;flex-direction:column;gap:18px}
+.feat .no{font-family:Inter,sans-serif;font-weight:800;color:var(--accent);font-size:15px;letter-spacing:.15em}
+.feat h3{margin:0;font-size:clamp(26px,3vw,34px);line-height:1.5;font-weight:900}
+.feat p{margin:0;color:var(--muted);font-size:16px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{background:rgba(201,165,255,.1);border:1px solid rgba(201,165,255,.3);color:#e7d6ff;border-radius:999px;padding:6px 16px;font-size:14px;font-weight:700}
+.feat.rev .shot{order:2}
+@media (max-width:900px){.feat.rev .shot{order:0}.hero-grid{grid-template-columns:1fr}.hero h1{white-space:normal}.hero-char{height:420px}}
+/* faces */
+.faces{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:20px}
+.face{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px 18px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.face img{height:280px;width:auto}
+.face b{font-size:18px}
+.face span{font-size:13px;color:var(--muted);line-height:1.7}
+/* levels / week */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:24px;margin-top:64px}
+.tbl{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.tbl h3{margin:0;padding:20px 26px;border-bottom:1px solid var(--line);font-size:18px}
+.tbl table{width:100%;border-collapse:collapse;font-size:15px}
+.tbl td{padding:13px 26px;border-top:1px solid #241739;vertical-align:top}
+.tbl tr:first-child td{border-top:0}
+.tbl td:first-child{white-space:nowrap;color:var(--accent);font-weight:700;width:1%}
+.tbl td:last-child{color:var(--muted)}
+/* concept */
+.concept{background:radial-gradient(circle at 70% 50%,rgba(138,63,252,.28),transparent 60%)}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:48px;align-items:center}
+.stage{position:relative;height:520px}
+.stage img{position:absolute;bottom:0}
+.sil{filter:brightness(0) drop-shadow(0 0 18px rgba(154,92,255,.85));opacity:.9}
+.steps{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+.step{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.step .n{font-family:Inter,sans-serif;font-weight:800;color:var(--accent);font-size:20px;min-width:30px}
+.step p{margin:0;color:var(--muted);font-size:15px}
+.step b{color:var(--text);display:block;font-size:17px;margin-bottom:2px}
+/* faq */
+.faq{max-width:860px}
+details{border-bottom:1px solid var(--line);padding:22px 0}
+details:first-of-type{border-top:1px solid var(--line)}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;font-weight:700;font-size:17px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--accent);font-size:24px;line-height:1;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin:12px 0 0;color:var(--muted);font-size:15px}
+footer{border-top:1px solid #1d1333;padding:56px 0 120px;background:#08050f}
+.foot{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end}
+.foot p{margin:0;color:#8f82a8;font-size:13px;max-width:720px}
+.badge{position:fixed;right:18px;bottom:18px;z-index:30;background:rgba(12,7,24,.85);border:1px solid var(--line);border-radius:14px;padding:10px 14px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.badge img{width:96px}
+</style>
+</head>
+<body>
+<header><nav>
+<a class="brand" href="#top"><span></span>キントレーナー</a>
+<div class="links"><a href="#features">機能</a><a href="#emotion">表情とボイス</a><a href="#character">好きなキャラで</a><a href="#faq">よくある質問</a></div>
+</nav></header>
+
+<section class="hero" id="top"><div class="wrap">
+<div class="hero-grid">
+<div>
+<div class="kicker">DESKTOP TRAINING PARTNER</div>
+<h1>キントレーナー</h1>
+<p class="lead">デスクトップに、<em>専属トレーナー。</em></p>
+<p class="sub">Windowsの画面の端にキャラクターが常駐して、筋トレと食事管理を見守ってくれるアプリ。サボれば怒るし、続ければ褒めてくれる。立ち絵とボイスを差し替えれば、好きなキャラでつくれます。</p>
+<div class="btns"><a class="btn primary" href="#movie">紹介動画を見る</a><a class="btn ghost" href="#features">機能を見る</a></div>
+</div>
+<img class="hero-char" src="assets/character.png" alt="キントレーナーのキャラクター（黒いパーカーの女の子）">
+</div>
+<figure class="video" id="movie" style="margin-left:0;margin-right:0">
+<video src="assets/kintrainer-pr.mp4" poster="assets/poster.jpg" controls playsinline preload="metadata" aria-label="キントレーナー紹介動画"></video>
+<figcaption>紹介動画（66秒・キャラボイスあり）｜アプリ画面は実際の録画です。</figcaption>
+</figure>
+</div></section>
+
+<section><div class="wrap">
+<div class="head"><div class="kicker">WHY</div><h2>筋トレ、ひとりだと<em>続かない。</em></h2><p>アプリは山ほどあるのに、なぜか続かない。だからキントレーナーは「見ててくれる存在」をつくりました。</p></div>
+<div class="cards3">
+<div class="card"><h3>通知は無視できる</h3><p>スマホの通知は、スワイプひとつで消せてしまう。</p></div>
+<div class="card"><h3>記録が面倒</h3><p>アプリを開いて、入力して…その手間が挫折のもと。</p></div>
+<div class="card"><h3>誰も見ていない</h3><p>ひとりだとサボっても誰にも何も言われない。</p></div>
+</div>
+</div></section>
+
+<section id="features"><div class="wrap">
+<div class="head"><div class="kicker">FEATURES</div><h2>画面の端で、<br><em>いつも見ててくれる。</em></h2><p>背景は透明で、常に最前面。作業のじゃまをせずにデスクトップに常駐し、クリックと右クリックだけで使えます。</p></div>
+
+<div class="feat">
+<div class="shot"><img src="assets/shot_status.jpg" alt="ステータス画面。BMI、好感度レベル、連続記録、累計トレーニング日数、カロリーとPFCの進捗"></div>
+<div class="txt"><div class="no">01　PROFILE &amp; STATUS</div><h3>名前と身長・体重を、登録するだけ。</h3><p>BMIを自動で計算。好感度レベル、連続記録、累計トレーニング日数、今日のカロリーとPFCまで、ひと目でわかります。</p><div class="chips"><span class="chip">BMI自動計算</span><span class="chip">好感度レベル</span><span class="chip">連続記録</span></div></div>
+</div>
+
+<div class="feat rev">
+<div class="shot"><img src="assets/shot_today.jpg" alt="今日（土曜日）のメニュー。バーピー、マウンテンクライマー、クランチ"></div>
+<div class="txt"><div class="no">02　TODAY'S MENU</div><h3>右クリックで、今日のメニュー。</h3><p>曜日ごとに鍛える部位が変わる、自宅でできるトレーニングメニューを表示。何をやるか迷う時間をなくします。</p><div class="chips"><span class="chip">曜日別メニュー</span><span class="chip">器具いらず</span><span class="chip">日曜は休養日</span></div></div>
+</div>
+
+<div class="feat">
+<div class="shot"><img src="assets/shot_meal.jpg" alt="食事を記録する画面。朝食・昼食・夕食・間食を選べる"></div>
+<div class="txt"><div class="no">03　MEAL LOG</div><h3>食事は、PFCで記録。</h3><p>朝食・昼食・夕食・間食ごとに、カロリー・タンパク質・脂質・糖質を記録。1日の目標と比べて確認できます。</p><div class="chips"><span class="chip">朝・昼・夕・間食</span><span class="chip">カロリー／P・F・C</span><span class="chip">今日の食事まとめ</span></div></div>
+</div>
+
+<div class="feat rev">
+<div class="shot"><img src="assets/shot_bmi.jpg" alt="1日の目標を設定する画面。BMIから自動提案ボタン"></div>
+<div class="txt"><div class="no">04　AUTO TARGET</div><h3>目標は、BMIから自動提案。</h3><p>体格に合わせて、1日の目標カロリーとPFCをボタンひとつで提案。もちろん自分で調整もできます。</p><div class="chips"><span class="chip">目標カロリー</span><span class="chip">タンパク質・脂質・糖質</span></div></div>
+</div>
+
+<div class="feat">
+<div class="shot"><img src="assets/shot_talk.jpg" alt="話しかける画面。キャラクターが返事をしている"></div>
+<div class="txt"><div class="no">05　TALK</div><h3>話しかけると、返してくれる。</h3><p>テキストで話しかけると、キーワードに合わせてキャラクターが返事をしてくれます。「メニュー教えて」「おはよう」など、ちょっとした会話も。</p><div class="chips"><span class="chip">キーワードで反応</span><span class="chip">ポーズも変化</span></div></div>
+</div>
+</div></section>
+
+<section id="emotion"><div class="wrap">
+<div class="head"><div class="kicker">EMOTION &amp; VOICE</div><h2>サボれば怒る。<br>続ければ<em>褒めてくれる。</em></h2><p>連続記録や好感度、食べすぎに合わせて、表情とボイスが自動で変わります。「怒らせたくない」が、続ける理由になる。</p></div>
+<div class="faces">
+<div class="face"><img src="assets/praise.png" alt="褒めるポーズ"><b>褒める</b><span>筋トレや食事を記録したとき</span></div>
+<div class="face"><img src="assets/ganbare_1.png" alt="がんばってのポーズ"><b>がんばって</b><span>好感度レベルアップ・週の初回起動</span></div>
+<div class="face"><img src="assets/ikari_1.png" alt="怒った顔"><b>怒る</b><span>連続記録が途切れた翌日</span></div>
+<div class="face"><img src="assets/komatta_1.png" alt="困った顔"><b>困る</b><span>カロリー超過が2日以上続いたとき</span></div>
+<div class="face"><img src="assets/already_done.png" alt="もうやったよのポーズ"><b>もうやったよ！</b><span>今日2回目のクリック</span></div>
+</div>
+<div class="two">
+<div class="tbl"><h3>連続記録と特別ボイス</h3><table>
+<tr><td>3日</td><td>はじめの一歩をお祝い</td></tr>
+<tr><td>5日・7日</td><td>習慣になってきたら特別ボイス</td></tr>
+<tr><td>14日</td><td>2週間継続を祝福</td></tr>
+<tr><td>30日</td><td>1か月達成の特別ボイス</td></tr>
+</table></div>
+<div class="tbl"><h3>好感度レベル</h3><table>
+<tr><td class="num">Lv.1</td><td>はじめまして</td></tr>
+<tr><td class="num">Lv.2</td><td>なんか…いるね</td></tr>
+<tr><td class="num">Lv.3</td><td>ちょっと頑張ってる</td></tr>
+<tr><td class="num">Lv.4</td><td>信頼関係が芽生えた</td></tr>
+<tr><td class="num">Lv.5</td><td>本物のトレーニー</td></tr>
+<tr><td class="num">Lv.∞</td><td>継続は力なり</td></tr>
+</table></div>
+</div>
+</div></section>
+
+<section class="concept" id="character"><div class="wrap">
+<div class="concept-grid">
+<div>
+<div class="head" style="margin-bottom:32px"><div class="kicker">YOUR CHARACTER</div><h2>トレーナーは、<br><em>好きなキャラで。</em></h2><p>キントレーナーは、キャラクターの立ち絵とボイスを素材として差し替えられる設計。あなたの“推し”を、専属トレーナーにできます。</p></div>
+<div class="steps">
+<div class="step"><span class="n">01</span><p><b>立ち絵を用意する</b>待機・褒める・がんばって・怒る・困る などの表情差分。</p></div>
+<div class="step"><span class="n">02</span><p><b>ボイスを用意する</b>褒める・叱る・励ます・連続記録のお祝い など。</p></div>
+<div class="step"><span class="n">03</span><p><b>差し替えて、あなただけのトレーナーに</b>セリフや反応はそのまま、見た目と声だけが変わります。</p></div>
+</div>
+</div>
+<div class="stage" aria-hidden="true">
+<img class="sil" src="assets/character.png" style="left:0;height:400px">
+<img class="sil" src="assets/character.png" style="left:16%;height:440px">
+<img src="assets/character.png" style="left:50%;transform:translateX(-50%);height:520px;z-index:2">
+<img class="sil" src="assets/character.png" style="right:16%;height:440px">
+<img class="sil" src="assets/character.png" style="right:0;height:400px">
+</div>
+</div>
+</div></section>
+
+<section id="faq"><div class="wrap faq">
+<div class="head"><div class="kicker">FAQ</div><h2>よくある質問</h2></div>
+<details><summary>どんなパソコンで使えますか？</summary><p>Windowsのデスクトップアプリです。Macには対応していません。</p></details>
+<details><summary>作業のじゃまになりませんか？</summary><p>背景が透明なキャラクターだけが画面の端に表示されます。好きな場所にドラッグして移動できるので、作業の邪魔にならない位置に置いておけます。</p></details>
+<details><summary>筋トレはどうやって記録するの？</summary><p>キャラクターをクリックするだけで「今日の筋トレ完了」を記録できます。同じ日にもう一度クリックすると「もうやったよ！」と返してくれます。</p></details>
+<details><summary>サボるとどうなりますか？</summary><p>連続記録が途切れると、翌日は怒った顔で出迎えられ、連続日数がリセットされます。食べすぎ（カロリー超過）が2日以上続いたときは、困った顔で知らせてくれます。</p></details>
+<details><summary>トレーニングメニューは自分で考えなくていい？</summary><p>右クリックの「今日のメニュー」に、曜日ごとのメニューが表示されます。月曜は胸・腕、水曜は脚、土曜は全身…と部位が変わり、日曜は休養日です。</p></details>
+<details><summary>目標カロリーはどう決まりますか？</summary><p>身長・体重から計算したBMIをもとに、1日の目標カロリーとタンパク質・脂質・糖質の目安を自動で提案します。自分で数値を変えることもできます。</p></details>
+<details><summary>記録したデータはどこに保存されますか？</summary><p>お使いのパソコンの中に保存されます。</p></details>
+<details><summary>PCを起動したら自動で出てきますか？</summary><p>右クリックメニューの「PC起動時に自動起動」をオンにすると、パソコンを起動したときに自動で立ち上がります。オン／オフはいつでも切り替えられます。</p></details>
+<details><summary>キャラクターは変えられますか？</summary><p>立ち絵（表情の差分）とボイスの素材を差し替えることで、好きなキャラクターのキントレーナーをつくれる設計です。</p></details>
+</div></section>
+
+<footer><div class="wrap foot">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div class="brand" style="font-size:20px"><span></span>キントレーナー</div>
+<p>※トレーニングメニューやカロリーの目安は一般的な参考情報です。体調や持病に合わせて、無理のない範囲で行ってください。</p>
+<p>© AIC</p>
+</div>
+<img src="assets/aic_logo.png" alt="AIC" style="width:150px">
+</div></footer>
+
+<a class="badge" href="#top" aria-label="AIC — ページ先頭へ"><img src="assets/aic_logo.png" alt=""></a>
+</body>
+</html>
